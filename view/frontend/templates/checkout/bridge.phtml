@@ -37,5 +37,16 @@ $js = "(function(){"
     . "var post=function(m){try{window.parent.postMessage(m,window.location.origin);}catch(e){}};"
     . $successJs
     . "})();";
+
+// The framed checkout sits under the widget's own "Checkout" header, so the
+// page's title is a duplicate. In a ~600px frame a theme's large title also
+// ran into the "Sign In" link Magento floats beside it (live d89, a 64px
+// title, 2026-10-07): hide the title and give Sign In its own line.
+$css = 'body.idea89-mini-checkout .page-title-wrapper{display:none}'
+    . 'body.idea89-mini-checkout .authentication-wrapper'
+    . '{float:none;margin:0 0 12px;max-width:none;text-align:right}';
 ?>
 <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $js, false) ?>
+<?php if ($block->getBridgeMode() !== 'success'): ?>
+<?= /* @noEscape */ $secureRenderer->renderTag('style', [], $css, false) ?>
+<?php endif; ?>

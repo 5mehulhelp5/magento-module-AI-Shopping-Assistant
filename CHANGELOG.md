@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-17
+
+### Added
+- **Load With Subresource Integrity** (Stores > Configuration > IDEA89 >
+  Widget Appearance, off by default). The widget then loads from a pinned copy
+  whose URL is the SHA-384 of its contents, with `integrity` and
+  `crossorigin="anonymous"` on the script tag, so the browser refuses it if it
+  is ever altered on the way. Security scanners and PCI DSS 6.4.3 reviews flag
+  every third-party script without one. The pin is fetched server-side from
+  `/widget/v1/<api_key>/pin.json`, cached for the time the API allows, and only
+  rendered if it is exactly a pin on the configured widget host; any failure
+  falls back to the usual script tag. With it on, dashboard changes reach the
+  storefront when the page cache refreshes.
+
+### Fixed
+- **No second chat launcher inside the framed checkout.** With Checkout Mode
+  set to Checkout in chat, the framed mini checkout page loaded the widget like
+  any storefront page, so a second launcher sat over the checkout form. The
+  mini checkout layout now drops the widget block, and the checkout page title
+  (the chat panel already says Checkout) is hidden in the frame.
+
 ## [1.5.0] - 2026-10-07
 
 ### Added

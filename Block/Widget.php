@@ -13,6 +13,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Data\Form\FormKey;
 use Idea89\Assistant\Model\CheckoutConfig;
 use Idea89\Assistant\Model\Config;
+use Idea89\Assistant\Model\WidgetPin;
 
 class Widget extends Template
 {
@@ -21,6 +22,7 @@ class Widget extends Template
         private readonly Config $config,
         private readonly CheckoutConfig $checkoutConfig,
         private readonly FormKey $formKey,
+        private readonly WidgetPin $widgetPin,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -49,6 +51,26 @@ class Widget extends Template
     public function getWidgetPosition(): string
     {
         return $this->config->getWidgetPosition();
+    }
+
+    /**
+     * The widget script's src, and its Subresource Integrity hash when the store
+     * loads a pinned copy (Model/WidgetPin). Without a pin, the rolling URL and
+     * no hash, as before.
+     *
+     * @return array{src: string, integrity: string|null}
+     */
+    public function getWidgetScript(): array
+    {
+        $pin = $this->widgetPin->get();
+        if ($pin !== null) {
+            return $pin;
+        }
+
+        return [
+            'src' => $this->getWidgetUrl() . '/widget/v1/' . rawurlencode($this->getApiKey()) . '.js',
+            'integrity' => null,
+        ];
     }
 
     /**

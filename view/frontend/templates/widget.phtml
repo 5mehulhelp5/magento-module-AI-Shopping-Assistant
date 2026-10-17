@@ -6,8 +6,13 @@ if (!$block->shouldRender()) {
 ?>
 <?php /** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */ ?>
 <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $block->getClientBootstrapJs(), false) ?>
+<?php $widgetScript = $block->getWidgetScript(); ?>
 <script
-    src="<?= $block->escapeUrl($block->getWidgetUrl()) ?>/widget/v1/<?= $block->escapeUrl($block->getApiKey()) ?>.js"
+    src="<?= $block->escapeUrl($widgetScript['src']) ?>"
+    <?php if ($widgetScript['integrity'] !== null): ?>
+    integrity="<?= $block->escapeHtmlAttr($widgetScript['integrity']) ?>"
+    crossorigin="anonymous"
+    <?php endif; ?>
     data-key="<?= $block->escapeHtmlAttr($block->getApiKey()) ?>"
     data-position="<?= $block->escapeHtmlAttr($block->getWidgetPosition()) ?>"
     async

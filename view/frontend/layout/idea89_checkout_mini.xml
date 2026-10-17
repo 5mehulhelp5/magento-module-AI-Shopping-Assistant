@@ -28,6 +28,10 @@
         <referenceBlock name="catalog.topnav" remove="true"/>
         <referenceBlock name="breadcrumbs" remove="true"/>
         <referenceContainer name="page.bottom.container" remove="true"/>
+        <!-- The chat widget belongs to the page that frames this checkout, not
+             to the frame: left in, it drew a second launcher over the
+             checkout form. -->
+        <referenceBlock name="idea89.widget" remove="true"/>
 
         <referenceContainer name="before.body.end">
             <!-- bridge_mode is what tells this page apart from the success

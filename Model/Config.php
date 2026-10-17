@@ -25,6 +25,7 @@ class Config
     private const XML_PATH_API_URL        = 'idea89/advanced/api_url';
     private const XML_PATH_WIDGET_URL     = 'idea89/advanced/widget_url';
     private const XML_PATH_POSITION       = 'idea89/widget/position';
+    private const XML_PATH_INTEGRITY      = 'idea89/widget/integrity';
     private const XML_PATH_SYNC_PRODUCTS  = 'idea89/sync/sync_products';
     private const XML_PATH_SYNC_CATS      = 'idea89/sync/sync_categories';
     private const XML_PATH_SYNC_CMS       = 'idea89/sync/sync_cms';
@@ -103,6 +104,16 @@ class Config
     public function getWidgetPosition(string $scopeType = ScopeInterface::SCOPE_STORE, ?string $scopeCode = null): string
     {
         return (string) $this->scopeConfig->getValue(self::XML_PATH_POSITION, $scopeType, $scopeCode) ?: 'bottom-right';
+    }
+
+    /**
+     * Load the widget from a pinned, content-addressed URL with Subresource
+     * Integrity (Model/WidgetPin). Off by default: a pinned storefront picks up
+     * dashboard changes when its page cache refreshes, not within minutes.
+     */
+    public function isWidgetIntegrityEnabled(string $scopeType = ScopeInterface::SCOPE_STORE, ?string $scopeCode = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_INTEGRITY, $scopeType, $scopeCode);
     }
 
 

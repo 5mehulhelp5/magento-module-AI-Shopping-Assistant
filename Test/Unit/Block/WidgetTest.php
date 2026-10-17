@@ -11,6 +11,7 @@ namespace Idea89\Assistant\Test\Unit\Block;
 use Idea89\Assistant\Block\Widget;
 use Idea89\Assistant\Model\CheckoutConfig;
 use Idea89\Assistant\Model\Config;
+use Idea89\Assistant\Model\WidgetPin;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
@@ -90,5 +91,35 @@ class WidgetTest extends TestCase
     {
         preg_match('/window\.__IDEA89_CHECKOUT=(\{.*\});/s', $js, $m);
         return $m[1] ?? '{}';
+    }
+
+    private function makeScriptBlock(?array $pin): Widget
+    {
+        $config = $this->createMock(Config::class);
+        $config->method('isEnabled')->willReturn(true);
+        $config->method('getApiKey')->willReturn('pk_test_123');
+        $config->method('getWidgetUrl')->willReturn('https://api.idea89.com');
+
+        $widgetPin = $this->createMock(WidgetPin::class);
+        $widgetPin->method('get')->willReturn($pin);
+
+        return (new ObjectManager($this))->getObject(Widget::class, [
+            'config'    => $config,
+            'widgetPin' => $widgetPin,
+        ]);
+    }
+
+    public function testWithoutAPinTheScriptIsTheRollingUrlWithNoIntegrity(): void
+    {
+        self::assertSame(
+            ['src' => 'https://api.idea89.com/widget/v1/pk_test_123.js', 'integrity' => null],
+            $this->makeScriptBlock(null)->getWidgetScript()
+        );
+    }
+
+    public function testWithAPinTheScriptIsThePinnedUrlAndItsIntegrity(): void
+    {
+        $pin = ['src' => 'https://api.idea89.com/widget/v1/p/' . str_repeat('a', 96) . '.js', 'integrity' => 'sha384-' . str_repeat('A', 64)];
+        self::assertSame($pin, $this->makeScriptBlock($pin)->getWidgetScript());
     }
 }

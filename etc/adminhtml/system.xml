@@ -72,6 +72,14 @@
                     <label>Position</label>
                     <source_model>Idea89\Assistant\Model\Config\Source\WidgetPosition</source_model>
                 </field>
+
+                <field id="integrity" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load With Subresource Integrity</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[<strong>Yes</strong>: the widget loads from a fixed copy with an <code>integrity</code> hash, so the browser refuses it if it is ever altered on the way. Security scanners and PCI DSS 6.4.3 reviews look for this on every third-party script.<br/>
+Changes you make in the IDEA89 dashboard then reach your storefront when Magento's page cache refreshes, instead of within five minutes. Flush the page cache to see a change at once.<br/>
+<strong>No</strong> (default): the widget always loads its latest version.]]></comment>
+                </field>
             </group>
 
             <!-- ── Content Sync ────────────────────────────── -->
